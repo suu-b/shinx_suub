@@ -323,19 +323,63 @@
       "constraints": [
         {
           "name": "customers_customer_id_not_null",
-          "type": "CHECK"
-        },
-        {
-          "name": "customers_pk",
-          "type": "PRIMARY KEY"
+          "type": "n",
+          "columns": [
+            "customer_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "NOT NULL customer_id",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         },
         {
           "name": "customers_email_not_null",
-          "type": "CHECK"
+          "type": "n",
+          "columns": [
+            "email"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "NOT NULL email",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
+        },
+        {
+          "name": "customers_pk",
+          "type": "PRIMARY KEY",
+          "columns": [
+            "customer_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "PRIMARY KEY (customer_id)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         },
         {
           "name": "email_unique",
-          "type": "UNIQUE"
+          "type": "UNIQUE",
+          "columns": [
+            "email"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "UNIQUE (email)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         }
       ],
       "indexes": [
@@ -375,27 +419,98 @@
       "constraints": [
         {
           "name": "order_items_fk",
-          "type": "FOREIGN KEY"
+          "type": "FOREIGN KEY",
+          "columns": [
+            "product_id"
+          ],
+          "referenced_table": "notpublic.products",
+          "referenced_columns": [
+            "product_id"
+          ],
+          "definition": "FOREIGN KEY (product_id) REFERENCES notpublic.products(product_id)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION"
         },
         {
           "name": "order_items_fk2",
-          "type": "FOREIGN KEY"
+          "type": "FOREIGN KEY",
+          "columns": [
+            "order_id"
+          ],
+          "referenced_table": "notpublic.orders",
+          "referenced_columns": [
+            "order_id"
+          ],
+          "definition": "FOREIGN KEY (order_id) REFERENCES notpublic.orders(order_id)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION"
         },
         {
           "name": "order_items_order_id_not_null",
-          "type": "CHECK"
-        },
-        {
-          "name": "order_items_product_id_not_null",
-          "type": "CHECK"
+          "type": "n",
+          "columns": [
+            "order_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "NOT NULL order_id",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         },
         {
           "name": "order_items_pk",
-          "type": "PRIMARY KEY"
+          "type": "PRIMARY KEY",
+          "columns": [
+            "order_id",
+            "product_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "PRIMARY KEY (order_id, product_id)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
+        },
+        {
+          "name": "order_items_product_id_not_null",
+          "type": "n",
+          "columns": [
+            "product_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "NOT NULL product_id",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         },
         {
           "name": "quantity_not_zero",
-          "type": "CHECK"
+          "type": "CHECK",
+          "columns": [
+            "quantity"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "CHECK (quantity > 0)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         }
       ],
       "indexes": [
@@ -436,16 +551,51 @@
       ],
       "constraints": [
         {
+          "name": "orders_fk",
+          "type": "FOREIGN KEY",
+          "columns": [
+            "customer_id"
+          ],
+          "referenced_table": "notpublic.customers",
+          "referenced_columns": [
+            "customer_id"
+          ],
+          "definition": "FOREIGN KEY (customer_id) REFERENCES notpublic.customers(customer_id)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": "NO ACTION",
+          "on_delete": "NO ACTION"
+        },
+        {
           "name": "orders_order_id_not_null",
-          "type": "CHECK"
+          "type": "n",
+          "columns": [
+            "order_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "NOT NULL order_id",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         },
         {
           "name": "orders_pk",
-          "type": "PRIMARY KEY"
-        },
-        {
-          "name": "orders_fk",
-          "type": "FOREIGN KEY"
+          "type": "PRIMARY KEY",
+          "columns": [
+            "order_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "PRIMARY KEY (order_id)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         }
       ],
       "indexes": [
@@ -498,20 +648,64 @@
       ],
       "constraints": [
         {
-          "name": "products_product_id_not_null",
-          "type": "CHECK"
+          "name": "price_not_null",
+          "type": "CHECK",
+          "columns": [
+            "price"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "CHECK (price >= 0::numeric)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         },
         {
           "name": "products_pk",
-          "type": "PRIMARY KEY"
+          "type": "PRIMARY KEY",
+          "columns": [
+            "product_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "PRIMARY KEY (product_id)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
+        },
+        {
+          "name": "products_product_id_not_null",
+          "type": "n",
+          "columns": [
+            "product_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "NOT NULL product_id",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         },
         {
           "name": "products_product_name_not_null",
-          "type": "CHECK"
-        },
-        {
-          "name": "price_not_null",
-          "type": "CHECK"
+          "type": "n",
+          "columns": [
+            "product_name"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "NOT NULL product_name",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         }
       ],
       "indexes": [
@@ -535,11 +729,33 @@
       "constraints": [
         {
           "name": "desks_desk_id_not_null",
-          "type": "CHECK"
+          "type": "n",
+          "columns": [
+            "desk_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "NOT NULL desk_id",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         },
         {
           "name": "desks_pkey",
-          "type": "PRIMARY KEY"
+          "type": "PRIMARY KEY",
+          "columns": [
+            "desk_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "PRIMARY KEY (desk_id)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         }
       ],
       "indexes": [
@@ -569,11 +785,33 @@
       "constraints": [
         {
           "name": "members_member_id_not_null",
-          "type": "CHECK"
+          "type": "n",
+          "columns": [
+            "member_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "NOT NULL member_id",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         },
         {
           "name": "members_pkey",
-          "type": "PRIMARY KEY"
+          "type": "PRIMARY KEY",
+          "columns": [
+            "member_id"
+          ],
+          "referenced_table": null,
+          "referenced_columns": [],
+          "definition": "PRIMARY KEY (member_id)",
+          "is_deferrable": false,
+          "initially_deferred": false,
+          "is_validated": true,
+          "on_update": null,
+          "on_delete": null
         }
       ],
       "indexes": [

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class Extension(BaseModel):
     name: str
@@ -15,6 +15,17 @@ class Column(BaseModel):
 class Constraint(BaseModel):
     name: str
     type: str
+    columns: list[str] = Field(default_factory=list)
+
+    referenced_table: str | None = None
+    referenced_columns: list[str] = Field(default_factory=list)
+
+    definition: str | None = None
+    is_deferrable: bool | None = None
+    initially_deferred: bool | None = None
+    is_validated: bool | None = None
+    on_update: str | None = None
+    on_delete: str | None = None
 
 class Index(BaseModel):
     name: str

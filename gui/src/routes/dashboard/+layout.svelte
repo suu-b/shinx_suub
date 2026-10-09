@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { LayoutProps } from './$types';
 	import Picker from '#lib/components/primitives/Picker.svelte';
-	import { Search } from "@lucide/svelte";
+	import { Search, Copy } from "@lucide/svelte";
 
 	let { children }: LayoutProps = $props();
 
@@ -53,6 +53,14 @@
                     class="w-full pl-10 pr-4 py-1.5 rounded-md bg-white/5 border border-white/10 text-sm text-on-surface placeholder:text-white/40 focus:outline-none focus:border-white/20 focus:bg-white/10 transition-all"
                 />
             </div>
+        </div>
+        <div class="ml-auto flex items-center gap-2">
+            <span class="text-sm text-on-surface-variant">Copy as JSON</span>
+            <button
+                class="p-1.5 rounded-md bg-transparent text-on-surface border border-white/20 hover:border-white/30 hover:bg-white/5 transition-all cursor-pointer"
+            >
+                <Copy size={14} />
+            </button>
         </div>
     </div>
     <div class="flex-1 overflow-auto">
