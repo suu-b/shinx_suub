@@ -1,9 +1,11 @@
 import os
 from typing import Any
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from langchain_core.language_models.chat_models import BaseChatModel
 
-load_dotenv()
+# find_dotenv() searches from CWD upward, reliably finding .env regardless
+# of which directory `uv run shinx` is invoked from.
+load_dotenv(find_dotenv(usecwd=True))
 
 def get_chat_model(
     provider: str | None = None,
@@ -36,7 +38,7 @@ def get_chat_model(
             os.getenv("GEMINI_API_KEY")
             or os.getenv("GOOGLE_API_KEY")
         )
-        model_name = model or os.getenv("SHINX_LLM_MODEL") or "gemini-3.5-flash-lite"
+        model_name = model or os.getenv("SHINX_LLM_MODEL") or "gemini-3.5-flash"
 
         return ChatGoogleGenerativeAI(
             model=model_name,
@@ -62,7 +64,7 @@ def get_chat_model(
         # Fallback to standard LangChain init_chat_model for any other provider
         from langchain.chat_models import init_chat_model
 
-        model_name = model or os.getenv("SHINX_LLM_MODEL") or "gemini-1.5-flash"
+        model_name = model or os.getenv("SHINX_LLM_MODEL") or "gemini-3.8-flash"
         return init_chat_model(
             model=model_name,
             model_provider=provider_name,

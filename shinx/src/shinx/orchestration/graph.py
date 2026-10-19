@@ -1,69 +1,35 @@
-from langgraph.graph import StateGraph, END
-from langgraph.prebuilt import ToolNode
 from typing import Any
+from langgraph.graph import StateGraph, END, START
 from langchain_core.language_models import BaseChatModel
 
-from shinx.core.agent import BaseAgent
-from shinx.orchestration.state import State
-from shinx.orchestration.routing import route_to_agent, should_continue
-from shinx.orchestration.agents.supervisor import SupervisorAgent
+from shinx.core.state import BaseState
+from shinx.orchestration.agent import OrchestratorAgent
+from shinx.orchestration.agents.optimizer import OptimizerAgent
+from shinx.logger_config import get_logger
 
-def build_orchestration_graph(
-    agents: dict[str, BaseAgent],
-    tools: dict[str, Any],
-    supervisor_llm: BaseChatModel
-):
+logger = get_logger(__name__)
+
+def build_orchestration_graph(llm: BaseChatModel, tools: dict[str, Any]):
     """
-    Build a multi-agent orchestration graph with supervisor.
-    
+    Build a multi-agent orchestration graph with orchestrator.
+
     Args:
-        agents: Dictionary of agent name to BaseAgent instance (excluding supervisor)
+        llm: LLM choice
         tools: Dictionary of tool name to BaseTool instance
-        supervisor_llm: LLM for the supervisor agent
-    
-    Returns:
-        Compiled LangGraph
     """
-    workflow = StateGraph(State)
-    
-    # Add other agent nodes first
-    for name, agent in agents.items():
-        workflow.add_node(name, agent.create_node(tools))
-    
-    # Create supervisor agent (needs to know about other agents)
-    supervisor = SupervisorAgent(llm=supervisor_llm)
-    
-    # Add supervisor node (it needs to know about other agents for routing)
-    workflow.add_node("supervisor", supervisor.create_node(tools, agents=agents))
-    
-    # Add shared tools node
-    all_tools = list(tools.values())
-    workflow.add_node("tools", ToolNode(all_tools))
-    
-    # Set entry point to supervisor
-    workflow.set_entry_point("supervisor")
-    
-    # Supervisor routes to agents or END
-    agent_mapping = {name: name for name in agents.keys()}
-    agent_mapping["END"] = END
-    workflow.add_conditional_edges(
-        "supervisor",
-        route_to_agent,
-        agent_mapping
-    )
-    
-    # Each agent routes to tools or END
-    for name in agents.keys():
-        workflow.add_conditional_edges(
-            name,
-            should_continue,
-            {
-                "continue": "tools",
-                "end": END
-            }
-        )
-    
-    # Tools always go back to supervisor
-    workflow.add_edge("tools", "supervisor")
-    
+    logger.info("Building orchestration graph...")
+    logger.debug(f"Tools: {list(tools.keys())}")
+
+    workflow = StateGraph(BaseState)
+
+    orchestrator = OrchestratorAgent(llm=llm)
+    optimizer = OptimizerAgent(llm=llm)
+
+    workflow.add_node("orchestrator", orchestrator.create_agent_node(tools=tools))
+    workflow.add_node("optimizer", optimizer.create_agent_node(tools=tools))
+
+    workflow.add_edge(START, "orchestrator")
+    workflow.add_edge("optimizer", "orchestrator")
+
+    logger.info("Orchestration graph compiled")
     return workflow.compile()
